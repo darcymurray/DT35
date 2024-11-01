@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<manifest>
+    <application name="DT35ThicknessDifferential">
+        <crown name="DT35ThicknessDifferential">
+            <desc>user script</desc>
+            <serves>
+                <event name="UpdateMinTimeDisplay">
+                    <desc/>
+                    <param desc="" multiplicity="1" name="parametername" type="string"/>
+                </event>
+                <event name="UpdateMaxTimeDisplay">
+                    <desc/>
+                    <param desc="" multiplicity="1" name="parametername" type="string"/>
+                </event>
+                <function name="OnGetDatabaseListSubmit"/>
+                <function name="OnDownloadDatabaseListFinished">
+                    <param multiplicity="1" name="finished" type="bool"/>
+                </function>
+                <function name="OnMinTimeChange">
+                    <param multiplicity="1" name="change" type="string"/>
+                </function>
+                <function name="OnMaxTimeChange">
+                    <param multiplicity="1" name="change" type="string"/>
+                </function>
+                <function name="OnGetValuesSubmit"/>
+            </serves>
+        </crown>
+        <meta key="author">Greg Shiels</meta>
+        <meta key="version">1.0</meta>
+        <meta key="priority">low</meta>
+        <meta key="copy-protected">false</meta>
+        <meta key="read-protected">false</meta>
+        <entry default="Main.lua" path="scripts"/>
+    </application>
+</manifest>

@@ -1,0 +1,42 @@
+<layout-row id="RowLayout1">
+	<layout-row id="RowLayout2">
+		<layout-column id="ColumnLayout2">
+			<davinci-text-field id="TextField1" type="text" label="minTime">
+				<crown-set event="change"
+					crown-function="DT35ThicknessDifferential/OnMinTimeChange"
+					protocol="crownMSGPACK" crown-path="change">
+				</crown-set>
+				<crown-on property="type"
+					crown-event="DT35ThicknessDifferential/UpdateMinTimeDisplay">
+				</crown-on>
+			</davinci-text-field>
+			<davinci-text-field id="TextField2" type="text" label="maxTime">
+				<crown-set event="change"
+					crown-function="DT35ThicknessDifferential/OnMaxTimeChange"
+					protocol="crownMSGPACK" crown-path="change">
+				</crown-set>
+				<crown-on property="type"
+					crown-event="DT35ThicknessDifferential/UpdateMaxTimeDisplay">
+				</crown-on>
+			</davinci-text-field>
+			<davinci-button id="Button1" type="primary" icon-position="append">
+				<span>Get values between times</span>
+				<crown-set event="submit"
+					crown-function="DT35ThicknessDifferential/OnGetValuesSubmit"
+					protocol="crownMSGPACK">
+				</crown-set>
+			</davinci-button>
+		</layout-column>
+		<layout-column id="ColumnLayout3"></layout-column>
+		<layout-column id="ColumnLayout4">
+			<appspace-file-download-button id="FileDownloadButton1" type="primary"
+				icon-position="append" downloaded-filename="SIM.API.Test.db"
+				file-path="public/SIM.API.Test.db">
+				<span>Download Database File</span>
+			</appspace-file-download-button>
+		</layout-column>
+		<layout-column id="ColumnLayout5">
+		</layout-column>
+	</layout-row>
+  
+</layout-row>
