@@ -12,6 +12,10 @@
                     <desc/>
                     <param desc="" multiplicity="1" name="parametername" type="string"/>
                 </event>
+                <event name="UpdateNumEntriesDisplay">
+                    <desc/>
+                    <param desc="" multiplicity="1" name="parametername" type="string"/>
+                </event>
                 <function name="OnGetDatabaseListSubmit"/>
                 <function name="OnDownloadDatabaseListFinished">
                     <param multiplicity="1" name="finished" type="bool"/>
@@ -23,6 +27,7 @@
                     <param multiplicity="1" name="change" type="string"/>
                 </function>
                 <function name="OnGetValuesSubmit"/>
+                <function name="OnToggleMeasurementsSubmit"/>
             </serves>
         </crown>
         <meta key="author">Greg Shiels</meta>

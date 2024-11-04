@@ -3,18 +3,11 @@ require("DeviceFunctions")
 require("Database")
 
 Main = {}
-Main.MinTime = "02:59:24.302"
-Main.MaxTime = "02:59:32.302"
-Script.serveEvent('DT35ThicknessDifferential.UpdateMinTimeDisplay', 'UpdateMinTimeDisplay')
-Script.serveEvent('DT35ThicknessDifferential.UpdateMaxTimeDisplay', 'UpdateMaxTimeDisplay')
-Script.notifyEvent('UpdateMinTimeDisplay', Main.MinTime)
-Script.notifyEvent('UpdateMaxTimeDisplay', Main.MaxTime)
-
+Main.MinTime = "0"
+Main.MaxTime = "0"
 local distanceBetweenSensors = 300
-
--- Timer set at interval to read process data
 Timer = Timer.create()
-Timer:setExpirationTime(100)
+Timer:setExpirationTime(50)
 Timer:setPeriodic(true)
 
 local function readDeviceInfo(device)
@@ -33,16 +26,17 @@ local function handleOnConnected()
   -- readDeviceInfo(IOLinkDT35B)
 
   -- Actions
-  -- DeviceFunctions.FactoryReset(device)
+  -- DeviceFunctions.FactoryReset(device)/
   -- DeviceFunctions.Teach(device, 0)
 
-  -- Timer:start()
+  if DatabaseHandle.Initialised then
+    Timer:start()
+  else return end
 end
 IOLink.RemoteDevice.register(IOLinkDT35A, 'OnConnected', handleOnConnected)
--- IOLink.RemoteDevice.register(IOLinkDT35B, 'OnConnected', handleOnConnected)
 
 local function handleOnExpired()
-  local time = DateTime.getTime()
+  local time = DateTime.create()
 
   local dataA,  _ = IOLinkDT35A:readProcessData() -- equivalent to IOLinkDT35A:readData(40, 0)
   local distanceA = string.unpack('I2', dataA)  -- Extract UINT16 value
@@ -54,9 +48,7 @@ local function handleOnExpired()
 
   local objectThickness = distanceBetweenSensors - (distanceAmm + distanceBmm)
 
-  print("DistanceA (mm): " .. distanceAmm .. ". DistanceB (mm): " .. distanceBmm .. ". Object Thickness (mm): " .. objectThickness)
-
-  DatabaseHandle.Insert(time, objectThickness)
+  DatabaseHandle.Insert(time:toString(), objectThickness)
 end
 Timer.register(Timer, 'OnExpired', handleOnExpired)
 
@@ -91,3 +83,12 @@ local function OnGetValuesSubmit()
 end
 Script.serveFunction("DT35ThicknessDifferential.OnGetValuesSubmit", OnGetValuesSubmit)
 
+Main.timerOn = 1
+local function OnToggleMeasurementsSubmit()
+  if Main.timerOn == 1 then Timer:stop() Main.timerOn = 0
+  else Timer:start() Main.timerOn = 1 end
+end
+Script.serveFunction("DT35ThicknessDifferential.OnToggleMeasurementsSubmit", OnToggleMeasurementsSubmit)
+
+Script.serveEvent('DT35ThicknessDifferential.UpdateMinTimeDisplay', 'UpdateMinTimeDisplay')
+Script.serveEvent('DT35ThicknessDifferential.UpdateMaxTimeDisplay', 'UpdateMaxTimeDisplay')

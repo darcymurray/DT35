@@ -1,6 +1,7 @@
 <layout-row id="RowLayout1">
 	<layout-row id="RowLayout2">
 		<layout-column id="ColumnLayout2">
+			<h4 id="Heading41">yyyy-mm-ddThh:mm:ss.000Z</h4>
 			<davinci-text-field id="TextField1" type="text" label="minTime">
 				<crown-set event="change"
 					crown-function="DT35ThicknessDifferential/OnMinTimeChange"
@@ -27,7 +28,15 @@
 				</crown-set>
 			</davinci-button>
 		</layout-column>
-		<layout-column id="ColumnLayout3"></layout-column>
+		<layout-column id="ColumnLayout3">
+			<davinci-button id="Button2" type="primary" icon-position="append">
+				<span>Toggle Measurements</span>
+				<crown-set event="submit"
+					crown-function="DT35ThicknessDifferential/OnToggleMeasurementsSubmit"
+					protocol="crownMSGPACK">
+				</crown-set>
+			</davinci-button>
+		</layout-column>
 		<layout-column id="ColumnLayout4">
 			<appspace-file-download-button id="FileDownloadButton1" type="primary"
 				icon-position="append" downloaded-filename="SIM.API.Test.db"
