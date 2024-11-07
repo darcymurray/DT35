@@ -1,50 +1,29 @@
 <layout-row id="RowLayout1">
 	<layout-row id="RowLayout2">
-		<layout-column id="ColumnLayout2">
-			<h4 id="Heading41">yyyy-mm-ddThh:mm:ss.000Z</h4>
-			<davinci-text-field id="TextField1" type="text" label="minTime">
-				<crown-set event="change"
-					crown-function="DT35ThicknessDifferential/OnMinTimeChange"
-					protocol="crownMSGPACK" crown-path="change">
-				</crown-set>
-				<crown-on property="type"
-					crown-event="DT35ThicknessDifferential/UpdateMinTimeDisplay">
-				</crown-on>
-			</davinci-text-field>
-			<davinci-text-field id="TextField2" type="text" label="maxTime">
-				<crown-set event="change"
-					crown-function="DT35ThicknessDifferential/OnMaxTimeChange"
-					protocol="crownMSGPACK" crown-path="change">
-				</crown-set>
-				<crown-on property="type"
-					crown-event="DT35ThicknessDifferential/UpdateMaxTimeDisplay">
-				</crown-on>
-			</davinci-text-field>
+		
+		
+		<layout-column id="ColumnLayout5">
 			<davinci-button id="Button1" type="primary" icon-position="append">
-				<span>Get values between times</span>
+				<span>Reset Database</span>
 				<crown-set event="submit"
-					crown-function="DT35ThicknessDifferential/OnGetValuesSubmit"
+					crown-function="DT35ThicknessDifferential/OnResetDatabaseSubmit"
 					protocol="crownMSGPACK">
 				</crown-set>
 			</davinci-button>
 		</layout-column>
-		<layout-column id="ColumnLayout3">
-			<davinci-button id="Button2" type="primary" icon-position="append">
-				<span>Toggle Measurements</span>
-				<crown-set event="submit"
-					crown-function="DT35ThicknessDifferential/OnToggleMeasurementsSubmit"
-					protocol="crownMSGPACK">
-				</crown-set>
-			</davinci-button>
+		<layout-column id="ColumnLayout1">
+			<davinci-value-display id="ValueDisplay1" label="Size Database">
+				<crown-on property="value"
+					crown-event="DT35ThicknessDifferential/UpdateDatabaseSizeDisplay">
+				</crown-on>
+			</davinci-value-display>
 		</layout-column>
 		<layout-column id="ColumnLayout4">
 			<appspace-file-download-button id="FileDownloadButton1" type="primary"
 				icon-position="append" downloaded-filename="SIM.API.Test.db"
-				file-path="public/SIM.API.Test.db">
+				file-path="/sdcard/0/database/SIM.API.Test.db">
 				<span>Download Database File</span>
 			</appspace-file-download-button>
-		</layout-column>
-		<layout-column id="ColumnLayout5">
 		</layout-column>
 	</layout-row>
   

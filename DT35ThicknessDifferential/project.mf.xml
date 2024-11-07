@@ -16,6 +16,18 @@
                     <desc/>
                     <param desc="" multiplicity="1" name="parametername" type="string"/>
                 </event>
+                <event name="UpdateDateTimeDisplay">
+                    <desc/>
+                    <param desc="" multiplicity="1" name="parametername" type="string"/>
+                </event>
+                <event name="UpdateUnixTimeDisplay">
+                    <desc/>
+                    <param desc="" multiplicity="1" name="parametername" type="string"/>
+                </event>
+                <event name="UpdateDatabaseSizeDisplay">
+                    <desc/>
+                    <param desc="" multiplicity="1" name="parametername" type="string"/>
+                </event>
                 <function name="OnGetDatabaseListSubmit"/>
                 <function name="OnDownloadDatabaseListFinished">
                     <param multiplicity="1" name="finished" type="bool"/>
@@ -28,6 +40,7 @@
                 </function>
                 <function name="OnGetValuesSubmit"/>
                 <function name="OnToggleMeasurementsSubmit"/>
+                <function name="OnResetDatabaseSubmit"/>
             </serves>
         </crown>
         <meta key="author">Greg Shiels</meta>

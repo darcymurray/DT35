@@ -1,0 +1,6 @@
+Script.serveEvent('DT35ThicknessDifferential.UpdateDatabaseSizeDisplay', 'UpdateDatabaseSizeDisplay')
+Script.serveEvent('DT35ThicknessDifferential.UpdateNumEntriesDisplay', 'UpdateNumEntriesDisplay')
+Script.serveEvent('DT35ThicknessDifferential.UpdateDateTimeDisplay', 'UpdateDateTimeDisplay')
+Script.serveEvent('DT35ThicknessDifferential.UpdateUnixTimeDisplay', 'UpdateUnixTimeDisplay')
+Script.serveEvent('DT35ThicknessDifferential.UpdateMinTimeDisplay', 'UpdateMinTimeDisplay')
+Script.serveEvent('DT35ThicknessDifferential.UpdateMaxTimeDisplay', 'UpdateMaxTimeDisplay')

@@ -1,12 +1,11 @@
-PowerA = Connector.Power.create('S1')
-PowerB = Connector.Power.create('S2')
-PowerA:enable(true)
-PowerB:enable(true)
-IOLinkDT35A = IOLink.RemoteDevice.create('S1')
-IOLinkDT35B = IOLink.RemoteDevice.create('S2')
-DeviceFunctions = {}
+Device = {}
+Device.PowerA = Connector.Power.create('S1')
+Device.PowerB = Connector.Power.create('S2')
+Device.IOLinkDT35A = IOLink.RemoteDevice.create('S1')
+Device.IOLinkDT35B = IOLink.RemoteDevice.create('S2')
+Device.ConnectedDevices = 0
 
-function DeviceFunctions.ReadIOLinkSpecificData(device)
+function Device.ReadIOLinkSpecificData(device)
   local indicies = {vendorName = 16, vendorText = 17, productName = 18, productID = 19, serialNumber = 21, appSpecificName = 24, userTagA = 84, userTagB = 85, processData = 40}
 
   local vendorName      = device:readData(indicies["vendorName"], 0)
@@ -30,11 +29,11 @@ function DeviceFunctions.ReadIOLinkSpecificData(device)
   print("Current processData value: " .. string.unpack("I2", processData))
 end
 
-function DeviceFunctions.ReadOutputSettings(device)
+function Device.ReadOutputSettings(device)
   local indicies = {}
 end
 
-function DeviceFunctions.ReadSensorPerformanceSettings(device)
+function Device.ReadSensorPerformanceSettings(device)
   local indicies = {responseTime = 103, integrationTime = 64, averaging = 67, bitFilter = 66}
 
   local responseTime = device:readData(indicies["responseTime"], 0)
@@ -48,7 +47,7 @@ function DeviceFunctions.ReadSensorPerformanceSettings(device)
   print("Current bitFilter value: " .. string.unpack("I1", bitFilter) .. " (writeable)")
 end
 
-function DeviceFunctions.ReadProcessDataSettings(device)
+function Device.ReadProcessDataSettings(device)
   local indicies = {structure = 83, resolution = 105, normalisation = 107}
 
   local structure,     _ = device:readData(indicies["structure"], 0)
@@ -60,7 +59,7 @@ function DeviceFunctions.ReadProcessDataSettings(device)
   print("Current normalisation value: " .. string.unpack("I2", normalisation) .. " (writeable)")
 end
 
-function DeviceFunctions.ReadOtherSettings(device)
+function Device.ReadOtherSettings(device)
   local indicies = {mfFunction = 81, mfLevel = 99, alarmFunction = 104, pushButtonLock = 82, laserStatus = 68}
   
   local mfFunction, _ = device:readData(indicies["mfFunction"], 0)
@@ -76,11 +75,34 @@ function DeviceFunctions.ReadOtherSettings(device)
   print("Current laserStatus value: " .. string.unpack("I1", laserStatus) .. " (writeable)")
 end
 
-function DeviceFunctions.FactoryReset(device)
+function Device.FactoryReset(device)
   print("Factory reset status: " .. device:writeData(2, 0, "\x82"))
 end
 
-function DeviceFunctions.Teach(device, num) -- 0 <= num <= 16
+function Device.Teach(device, num) -- 0 <= num <= 16
   print("Teach status: " .. device:writeData(130, 0, string.pack("I2", num)))
 end
+
+function Device.ReadDeviceInfo(device)
+  Device.ReadIOLinkSpecificData(device)
+  Device.ReadOutputSettings(device)
+  Device.ReadSensorPerformanceSettings(device)
+  Device.ReadProcessDataSettings(device)
+  Device.ReadOtherSettings(device)
+end
+
+function Device.HandleOnConnected()
+  print('IO-Link device OD1000 connected')
+  Device.ConnectedDevices = Device.ConnectedDevices + 1
+
+  -- Device info/parameters/settings
+  -- readDeviceInfo(IOLinkDT35A)
+  -- readDeviceInfo(IOLinkDT35B)
+
+  -- Actions
+  -- Device.FactoryReset(device)
+  -- Device.Teach(device, 0)
+end
+IOLink.RemoteDevice.register(Device.IOLinkDT35A, 'OnConnected', Device.HandleOnConnected)
+IOLink.RemoteDevice.register(Device.IOLinkDT35B, 'OnConnected', Device.HandleOnConnected)
 

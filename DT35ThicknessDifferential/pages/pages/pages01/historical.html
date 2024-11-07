@@ -1,0 +1,171 @@
+<layout-row id="RowLayout1">
+	<layout-column id="ColumnLayout5">
+		<!-- <layout-row id="RowLayout6">
+            <layout-column id="ColumnLayout2">
+							<davinci-text-field id="TextField1" type="text"
+								label="minTime (yyyy-mm-ddThh:mm:ss)">
+								<crown-set event="change"
+									crown-function="DT35ThicknessDifferential/OnMinTimeChange"
+									protocol="crownMSGPACK" crown-path="change">
+								</crown-set>
+								<crown-on property="type"
+									crown-event="DT35ThicknessDifferential/UpdateMinTimeDisplay">
+								</crown-on>
+							</davinci-text-field>
+							<davinci-text-field id="TextField2" type="text"
+								label="maxTime (yyyy-mm-ddThh:mm:ss)">
+								<crown-set event="change"
+									crown-function="DT35ThicknessDifferential/OnMaxTimeChange"
+									protocol="crownMSGPACK" crown-path="change">
+								</crown-set>
+								<crown-on property="type"
+									crown-event="DT35ThicknessDifferential/UpdateMaxTimeDisplay">
+								</crown-on>
+							</davinci-text-field>
+                            <davinci-button id="Button2" type="primary" icon-position="append">
+					<span>Get values between times</span>
+					<crown-set event="submit"
+						crown-function="DT35ThicknessDifferential/OnGetValuesSubmit"
+						protocol="crownMSGPACK">
+					</crown-set>
+				</davinci-button>
+						</layout-column>
+                        </layout-row> -->
+		<!-- <layout-row id="RowLayout2">
+			<layout-column id="ColumnLayout6">
+				<layout-row id="RowLayout4">
+					<davinci-drop-down id="DropDown1" label="Month">
+						<davinci-option id="Option2">
+							<span>Jan</span>
+						</davinci-option>
+						<davinci-option id="Option12">
+							<span>Feb</span>
+						</davinci-option>
+						<davinci-option id="Option11">
+							<span>Mar</span>
+						</davinci-option>
+						<davinci-option id="Option10">
+							<span>Apr</span>
+						</davinci-option>
+						<davinci-option id="Option9">
+							<span>May</span>
+						</davinci-option>
+						<davinci-option id="Option8">
+							<span>Jun</span>
+						</davinci-option>
+						<davinci-option id="Option7">
+							<span>Jul</span>
+						</davinci-option>
+						<davinci-option id="Option6">
+							<span>Aug</span>
+						</davinci-option>
+						<davinci-option id="Option5">
+							<span>Sep</span>
+						</davinci-option>
+						<davinci-option id="Option3">
+							<span>Oct</span>
+						</davinci-option>
+						<davinci-option id="Option1">
+							<span>Nov</span>
+						</davinci-option>
+						<davinci-option id="Option4">
+							<span>Dec</span>
+						</davinci-option>
+					</davinci-drop-down>
+					<davinci-number-input id="NumberInput1" step="1" max="31" min="1"
+						label="Day">
+					</davinci-number-input>
+					<davinci-drop-down id="DropDown2" label="Year">
+						<davinci-option id="Option13">
+							<span>2024</span>
+						</davinci-option>
+					</davinci-drop-down>
+					<davinci-number-input id="NumberInput2" step="1" max="23"
+						label="Hour">
+					</davinci-number-input>
+				</layout-row>
+				<layout-row id="RowLayout5">
+					<davinci-drop-down id="DropDown5" label="Month">
+						<davinci-option id="Option15">
+							<span>Jan</span>
+						</davinci-option>
+						<davinci-option id="Option16">
+							<span>Feb</span>
+						</davinci-option>
+						<davinci-option id="Option17">
+							<span>Mar</span>
+						</davinci-option>
+						<davinci-option id="Option18">
+							<span>Apr</span>
+						</davinci-option>
+						<davinci-option id="Option19">
+							<span>May</span>
+						</davinci-option>
+						<davinci-option id="Option20">
+							<span>Jun</span>
+						</davinci-option>
+						<davinci-option id="Option21">
+							<span>Jul</span>
+						</davinci-option>
+						<davinci-option id="Option22">
+							<span>Aug</span>
+						</davinci-option>
+						<davinci-option id="Option23">
+							<span>Sep</span>
+						</davinci-option>
+						<davinci-option id="Option24">
+							<span>Oct</span>
+						</davinci-option>
+						<davinci-option id="Option25">
+							<span>Nov</span>
+						</davinci-option>
+						<davinci-option id="Option26">
+							<span>Dec</span>
+						</davinci-option>
+					</davinci-drop-down>
+					<davinci-number-input id="NumberInput4" step="1" max="31" min="1"
+						label="Day">
+					</davinci-number-input>
+					<davinci-drop-down id="DropDown4" label="Year">
+						<davinci-option id="Option14">
+							<span>2024</span>
+						</davinci-option>
+					</davinci-drop-down>
+					<davinci-number-input id="NumberInput5" step="1" max="23"
+						label="Hour">
+					</davinci-number-input>
+				</layout-row>
+				<davinci-button id="Button1" type="primary" icon-position="append">
+					<span>Get values between times</span>
+					<crown-set event="submit"
+						crown-function="DT35ThicknessDifferential/OnGetValuesSubmit"
+						protocol="crownMSGPACK">
+					</crown-set>
+				</davinci-button>
+			</layout-column>
+			<layout-column id="ColumnLayout3" style="align-items: flex-end">
+				<h4 id="Heading42">Current System Time</h4>
+				<davinci-value-display id="ValueDisplay1">
+					<crown-on property="value"
+						crown-event="DT35ThicknessDifferential/UpdateDateTimeDisplay">
+					</crown-on>
+				</davinci-value-display>
+			</layout-column>
+			
+		</layout-row> -->
+		<layout-row id="RowLayout3">
+			<layout-column id="ColumnLayout1">
+				<davinci-button id="Button3" type="primary" icon-position="append">
+					<span>Get values between times</span>
+					<crown-set event="submit"
+						crown-function="DT35ThicknessDifferential/OnGetValuesSubmit"
+						protocol="crownMSGPACK">
+					</crown-set>
+				</davinci-button>
+				<sick-viewer2d id="ViewerHistorical" viewer-id="ViewerHistorical"
+					style="width: 100%; height: 100%">
+				</sick-viewer2d>
+			</layout-column>
+		</layout-row>
+	</layout-column>
+</layout-row>
