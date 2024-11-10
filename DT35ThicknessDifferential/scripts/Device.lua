@@ -4,6 +4,10 @@ Device.PowerB = Connector.Power.create('S2')
 Device.IOLinkDT35A = IOLink.RemoteDevice.create('S1')
 Device.IOLinkDT35B = IOLink.RemoteDevice.create('S2')
 Device.ConnectedDevices = 0
+Device.Timer = Timer.create()
+Device.Timer:setPeriodic(true)
+Device.Timer:setExpirationTime(1000)
+Device.Timer:start()
 
 function Device.ReadIOLinkSpecificData(device)
   local indicies = {vendorName = 16, vendorText = 17, productName = 18, productID = 19, serialNumber = 21, appSpecificName = 24, userTagA = 84, userTagB = 85, processData = 40}
@@ -91,7 +95,7 @@ function Device.ReadDeviceInfo(device)
   Device.ReadOtherSettings(device)
 end
 
-function Device.HandleOnConnected()
+local function handleOnConnected()
   print('IO-Link device OD1000 connected')
   Device.ConnectedDevices = Device.ConnectedDevices + 1
 
@@ -103,6 +107,10 @@ function Device.HandleOnConnected()
   -- Device.FactoryReset(device)
   -- Device.Teach(device, 0)
 end
-IOLink.RemoteDevice.register(Device.IOLinkDT35A, 'OnConnected', Device.HandleOnConnected)
-IOLink.RemoteDevice.register(Device.IOLinkDT35B, 'OnConnected', Device.HandleOnConnected)
+IOLink.RemoteDevice.register(Device.IOLinkDT35A, 'OnConnected', handleOnConnected)
+IOLink.RemoteDevice.register(Device.IOLinkDT35B, 'OnConnected', handleOnConnected)
+
+function Device.HandleOnExpired()
+  if (Device.ConnectedDevices == Main.NumDevices) then Device.Timer = nil end
+end
 

@@ -66,7 +66,7 @@ end
 function DatabaseHandle.DatabaseInitialised()
   -- Init
   DatabaseHandle.db = Database.SQL.SQLite.create()
-  print("Database connection status: " .. tostring(DatabaseHandle.db:openFile(Main.DbFileName, "READ_WRITE_CREATE")))
+  print("Database connection status: " .. tostring(DatabaseHandle.db:openFile(Database.DbFileName, "READ_WRITE_CREATE")))
   print("Database SQLite version: " .. DatabaseHandle.db:getVersion())
 
   -- Schema
@@ -103,9 +103,6 @@ function DatabaseHandle.Insert(time, thickness)
     DatabaseHandle.insertStmt:bind(0, DatabaseHandle.nextId, time, thickness)
     if (DatabaseHandle.insertStmt:step() == "DONE") then
       DatabaseHandle.nextId = DatabaseHandle.nextId + 1
-      if DatabaseHandle.nextId == 602 then
-        local debug = true
-      end
       Script.notifyEvent('UpdateDatabaseSizeDisplay', tostring(DatabaseHandle.nextId))
       print(string.format("Inserted into database. Time: " .. time .. ", thickness: " .. thickness))
     else
@@ -117,15 +114,14 @@ end
 
 -- Gets values between two times: Main.MinTime, Main.MaxTime
 function DatabaseHandle.Get()
-  TimerHandle.Timer:stop() TimerHandle.timerOn = 0
-  assert(TimerHandle.MinTime <= TimerHandle.MaxTime, "Main.MinTime > Main.MaxTime")
-  -- assert(string.match(Main.MinTime, "^%d%d:%d%d:%d%d%.%d%d%d$") ~= nil, "Main.MinTime invalid format")
-  -- assert(string.match(Main.MaxTime, "^%d%d:%d%d:%d%d%.%d%d%d$") ~= nil, "Main.MaxTime invalid format")
+  TimerHandle.Timer:stop() TimerHandle.measuringOn = 0
+  assert(TimerHandle.StartDate + TimerHandle.StartTime <= TimerHandle.EndDate + TimerHandle.EndTime, "Start time > End time")
   local datetime = {}
   local thickness = {}
   local timeStarted = DateTime.getTimestamp()
   if (DatabaseHandle.getStmt ~= nil) then
-    DatabaseHandle.getStmt:bind(0, TimerHandle.MinTime, TimerHandle.MaxTime)
+    local startDateTime, endDateTime = TimerHandle.StartDate + TimerHandle.StartTime, TimerHandle.EndDate + TimerHandle.EndTime
+    DatabaseHandle.getStmt:bind(0, startDateTime, endDateTime)
     local stepResult = DatabaseHandle.getStmt:step()
     if (stepResult == "DONE") then print("No results")
     elseif (stepResult == "ERROR") then print("Could not get data: " .. DatabaseHandle.getStmt:getErrorMessage())
@@ -143,22 +139,22 @@ function DatabaseHandle.Get()
       end
       if (stepResult == "ERROR") then print("Could not get data: " .. DatabaseHandle.getStmt:getErrorMessage()) end
       local timeEnded = DateTime.getTimestamp()
-      print(string.format("SQL Get query took %ss to process %s entries", tostring((timeEnded - timeStarted) / 1000), tostring(numEntries)))
+      Script.notifyEvent('UpdateSQLExecTimeDisplay', string.format("SQL Get query took %ss to process %s entries", tostring((timeEnded - timeStarted) / 1000), tostring(numEntries)))
       Viewer.Present(datetime, thickness)
     end
     DatabaseHandle.getStmt:reset()
   else print("Could not get data into DB because statement is not pre-compiled") end
-  TimerHandle.Timer:start() TimerHandle.timerOn = 1
+  TimerHandle.Timer:start() TimerHandle.measuringOn = 1
 end
 
 local function OnResetDatabaseSubmit()
-  TimerHandle.Timer:stop() TimerHandle.timerOn = 0
+  TimerHandle.Timer:stop() TimerHandle.measuringOn = 0
   DatabaseHandle.db = nil
   DatabaseHandle.Initialised = false
   if File.del("/sdcard/0/database/SIM.API.Test.db") then print("Database deleted") end
   if DatabaseHandle.DatabaseExists() and DatabaseHandle.DatabaseInitialised() and DatabaseHandle.InitialiseStatements() then
     DatabaseHandle.Initialised = true
-    TimerHandle.Timer:start() TimerHandle.timerOn = 1
+    TimerHandle.Timer:start() TimerHandle.measuringOn = 1
   else DatabaseHandle.Initialised = false end
 end
 Script.serveFunction("DT35ThicknessDifferential.OnResetDatabaseSubmit", OnResetDatabaseSubmit)
