@@ -1,5 +1,11 @@
 DT = {}
 
+-- DateTime.setDateTime(2024, 11, 11, 11, 10, 00, false) -- One Time
+-- DateTime.setTimeZone("NZ")
+-- print(DateTime.getTimeZone())
+-- print(DateTime.getDateTime())
+-- print(DateTime.getDateTimeValuesUTC())
+
 local function isLeapYear(year)
   return (year % 4 == 0 and year % 100 ~= 0) or (year % 400 == 0)
 end
@@ -11,7 +17,7 @@ local function daysInMonth(month, year)
 end
 
 function DT.DateToUnixTimestamp(dateStr)
-  local day, month, year = string.match(dateStr, "(%d%d)%/(%d%d)%/(%d%d%d%d)")
+  local day, month, year = string.match(dateStr, "(%d%d)/(%d%d)/(%d%d%d%d)")
   if day == nil or month == nil or year == nil then return 0 end
   day, month, year = tonumber(day), tonumber(month), tonumber(year)
 

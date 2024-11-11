@@ -66,7 +66,7 @@ end
 function DatabaseHandle.DatabaseInitialised()
   -- Init
   DatabaseHandle.db = Database.SQL.SQLite.create()
-  print("Database connection status: " .. tostring(DatabaseHandle.db:openFile(Database.DbFileName, "READ_WRITE_CREATE")))
+  print("Database connection status: " .. tostring(DatabaseHandle.db:openFile(Main.DbFilePath, "READ_WRITE_CREATE")))
   print("Database SQLite version: " .. DatabaseHandle.db:getVersion())
 
   -- Schema
@@ -114,7 +114,8 @@ end
 
 -- Gets values between two times: Main.MinTime, Main.MaxTime
 function DatabaseHandle.Get()
-  TimerHandle.Timer:stop() TimerHandle.measuringOn = 0
+  TimerHandle.Timer:stop() 
+  TimerHandle.measuringOn = 0
   assert(TimerHandle.StartDate + TimerHandle.StartTime <= TimerHandle.EndDate + TimerHandle.EndTime, "Start time > End time")
   local datetime = {}
   local thickness = {}
@@ -144,17 +145,20 @@ function DatabaseHandle.Get()
     end
     DatabaseHandle.getStmt:reset()
   else print("Could not get data into DB because statement is not pre-compiled") end
-  TimerHandle.Timer:start() TimerHandle.measuringOn = 1
+  TimerHandle.Timer:start() 
+  TimerHandle.measuringOn = 1
 end
 
 local function OnResetDatabaseSubmit()
-  TimerHandle.Timer:stop() TimerHandle.measuringOn = 0
+  TimerHandle.Timer:stop() 
+  TimerHandle.measuringOn = 0
   DatabaseHandle.db = nil
   DatabaseHandle.Initialised = false
   if File.del("/sdcard/0/database/SIM.API.Test.db") then print("Database deleted") end
   if DatabaseHandle.DatabaseExists() and DatabaseHandle.DatabaseInitialised() and DatabaseHandle.InitialiseStatements() then
     DatabaseHandle.Initialised = true
-    TimerHandle.Timer:start() TimerHandle.measuringOn = 1
+    TimerHandle.Timer:start() 
+    TimerHandle.measuringOn = 1
   else DatabaseHandle.Initialised = false end
 end
 Script.serveFunction("DT35ThicknessDifferential.OnResetDatabaseSubmit", OnResetDatabaseSubmit)

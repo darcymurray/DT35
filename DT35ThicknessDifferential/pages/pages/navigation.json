@@ -1,4 +1,8 @@
 {
   "version": "1.0", 
-  "pages": []
+  "pages": [
+    {"path": "pages01/live.html"},
+    {"path": "pages01/historical.html"},
+    {"path": "pages01/database.html"}
+  ]
 }

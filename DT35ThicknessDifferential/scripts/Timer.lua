@@ -1,13 +1,14 @@
 TimerHandle = {}
-TimerHandle.StartDate = 1731024000000
-TimerHandle.StartDateString = "08/11/2024"
-TimerHandle.EndDate = 1731024000000
-TimerHandle.EndDateString = "08/11/2024"
-TimerHandle.StartTime = 1000
-TimerHandle.StartTimeString = "00:00:01"
-TimerHandle.EndTime = 86399000
-TimerHandle.EndTimeString = "23:59:59"
+TimerHandle.StartDate = 1731236400000
+TimerHandle.StartDateString = "11/11/2024"
+TimerHandle.EndDate = 1731236400000
+TimerHandle.EndDateString = "11/11/2024"
+TimerHandle.StartTime = 40380000
+TimerHandle.StartTimeString = "11:13:00"
+TimerHandle.EndTime = 40440000
+TimerHandle.EndTimeString = "11:14:00"
 TimerHandle.Timer = Timer.create()
+TimerHandle.Timer:setExpirationTime(Main.TimerExpirationTime)
 TimerHandle.Timer:setPeriodic(true)
 
 -- Main timer expiry and measurement reading function
@@ -29,6 +30,7 @@ local function handleOnExpired()
     local objectThickness = Main.DistanceBetweenSensors - (distanceAmm + distanceBmm)
 
     DatabaseHandle.Insert(time, objectThickness)
+    ViewerLive.DisplayData(time, objectThickness)
   end
 end
 TimerHandle.Timer:register('OnExpired', handleOnExpired)
@@ -48,13 +50,12 @@ Script.serveFunction("DT35ThicknessDifferential.OnToggleMeasurementsSubmit", OnT
 local function OnStartDateChange(change)
   local unix = DT.DateToUnixMSTimestamp(change)
   if unix ~= 0 then
-    if TimerHandle.StartDate == 0 or unix <= TimerHandle.EndDate then
-      TimerHandle.StartDate = unix
-      TimerHandle.StartDateString = change
-      print(string.format("Start date set to: %s (%s)", change, tostring(unix)))
-      Script.notifyEvent('UpdateStartDateDisplay', change)
-      Script.notifyEvent('UpdateStartDateTimeDisplay', string.format("%s %s", TimerHandle.StartDateString, TimerHandle.StartTimeString))
-    end
+    TimerHandle.StartDate = unix
+    TimerHandle.StartDateString = change
+    print(string.format("Start date set to: %s (%s)", change, tostring(unix)))
+    Script.notifyEvent('UpdateStartDateDisplay', change)
+    Script.notifyEvent('UpdateStartDateTimeDisplay', string.format("%s %s", TimerHandle.StartDateString, TimerHandle.StartTimeString))
+    -- Script.notifyEvent('UpdateStartDateTimeDisplay', string.format("%s %s (%s)", TimerHandle.StartDateString, TimerHandle.StartTimeString, TimerHandle.StartDate + TimerHandle.StartTime))
   end
 end
 Script.serveFunction("DT35ThicknessDifferential.OnStartDateChange", OnStartDateChange)
@@ -63,13 +64,12 @@ Script.serveFunction("DT35ThicknessDifferential.OnStartDateChange", OnStartDateC
 local function OnEndDateChange(change)
   local unix = DT.DateToUnixMSTimestamp(change)
   if unix ~= 0 then
-    if TimerHandle.EndDate == 0 or unix >= TimerHandle.StartDate then
-      TimerHandle.EndDate = unix
-      TimerHandle.EndDateString = change
-      print(string.format("End date set to: %s (%s)", change, tostring(unix)))
-      Script.notifyEvent('UpdateEndDateDisplay', change)
-      Script.notifyEvent('UpdateEndDateTimeDisplay', string.format("%s %s", TimerHandle.EndDateString, TimerHandle.EndTimeString))
-    end
+    TimerHandle.EndDate = unix
+    TimerHandle.EndDateString = change
+    print(string.format("End date set to: %s (%s)", change, tostring(unix)))
+    Script.notifyEvent('UpdateEndDateDisplay', change)
+    Script.notifyEvent('UpdateEndDateTimeDisplay', string.format("%s %s", TimerHandle.EndDateString, TimerHandle.EndTimeString))
+    -- Script.notifyEvent('UpdateEndDateTimeDisplay', string.format("%s %s (%s)", TimerHandle.EndDateString, TimerHandle.EndTimeString, TimerHandle.EndDate + TimerHandle.EndTime))
   end
 end
 Script.serveFunction("DT35ThicknessDifferential.OnEndDateChange", OnEndDateChange)
@@ -83,6 +83,7 @@ local function OnStartTimeChange(change)
     print(string.format("Start time set to: %s (%s)", change, tostring(unix)))
     Script.notifyEvent('UpdateStartTimeDisplay', change)
     Script.notifyEvent('UpdateStartDateTimeDisplay', string.format("%s %s", TimerHandle.StartDateString, TimerHandle.StartTimeString))
+    -- Script.notifyEvent('UpdateStartDateTimeDisplay', string.format("%s %s (%s)", TimerHandle.StartDateString, TimerHandle.StartTimeString, TimerHandle.StartDate + TimerHandle.StartTime))
   end
 end
 Script.serveFunction("DT35ThicknessDifferential.OnStartTimeChange", OnStartTimeChange)
@@ -96,6 +97,7 @@ local function OnEndTimeChange(change)
     print(string.format("End time set to: %s (%s)", change, tostring(unix)))
     Script.notifyEvent('UpdateEndTimeDisplay', change)
     Script.notifyEvent('UpdateEndDateTimeDisplay', string.format("%s %s", TimerHandle.EndDateString, TimerHandle.EndTimeString))
+    -- Script.notifyEvent('UpdateEndDateTimeDisplay', string.format("%s %s (%s)", TimerHandle.EndDateString, TimerHandle.EndTimeString, TimerHandle.EndDate + TimerHandle.EndTime))
   end
 end
 Script.serveFunction("DT35ThicknessDifferential.OnEndTimeChange", OnEndTimeChange)
