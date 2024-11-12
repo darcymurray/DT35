@@ -18,7 +18,7 @@ local function main()
   if DatabaseHandle.DatabaseExists() and DatabaseHandle.DatabaseInitialised() and DatabaseHandle.InitialiseStatements() then
     Device.PowerA:enable(true)
     Device.PowerB:enable(true)
-    Device.Timer:register('OnExpired', Device.HandleOnExpired) -- Waits for devices to connect
+    Device.Timer:register('OnExpired', Device.HandleOnExpired) -- Waits for devices to connect: Doesn't work
     TimerHandle.Timer:start() -- Starts taking measurements
   else return end
 end

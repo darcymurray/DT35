@@ -119,15 +119,14 @@ function DatabaseHandle.Get()
   assert(TimerHandle.StartDate + TimerHandle.StartTime <= TimerHandle.EndDate + TimerHandle.EndTime, "Start time > End time")
   local datetime = {}
   local thickness = {}
-  local timeStarted = DateTime.getTimestamp()
   if (DatabaseHandle.getStmt ~= nil) then
     local startDateTime, endDateTime = TimerHandle.StartDate + TimerHandle.StartTime, TimerHandle.EndDate + TimerHandle.EndTime
     DatabaseHandle.getStmt:bind(0, startDateTime, endDateTime)
+    local timeStarted = DateTime.getTimestamp()
     local stepResult = DatabaseHandle.getStmt:step()
     if (stepResult == "DONE") then print("No results")
     elseif (stepResult == "ERROR") then print("Could not get data: " .. DatabaseHandle.getStmt:getErrorMessage())
     else
-      stepResult = DatabaseHandle.getStmt:step()
       local numEntries = 1
       while (stepResult == "ROW") do
         local result = DatabaseHandle.getStmt:getColumsForLuaTable()
@@ -145,7 +144,7 @@ function DatabaseHandle.Get()
     end
     DatabaseHandle.getStmt:reset()
   else print("Could not get data into DB because statement is not pre-compiled") end
-  TimerHandle.Timer:start() 
+  TimerHandle.Timer:start()
   TimerHandle.measuringOn = 1
 end
 
