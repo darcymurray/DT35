@@ -1,6 +1,5 @@
 DT = {}
 
--- DateTime.setDateTime(2024, 11, 11, 11, 10, 00, false) -- One Time
 -- DateTime.setTimeZone("NZ")
 -- print(DateTime.getTimeZone())
 -- print(DateTime.getDateTime())
@@ -35,7 +34,7 @@ function DT.DateToUnixTimestamp(dateStr)
   -- days -> seconds
   local timestamp = days * 86400
 
-  return timestamp
+  return timestamp - 46800 -- returns time in GMT rather than local time zone, hence + 13h
 end
 
 function DT.DateToUnixMSTimestamp(dateStr)

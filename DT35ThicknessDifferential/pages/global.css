@@ -82,6 +82,11 @@ davinci-button {
   border: 0;
 }
 
+appspace-file-download-button {
+  background-color: #434b53;
+  border: 0;
+}
+
 .fa-pencil {
   display: none;
 }

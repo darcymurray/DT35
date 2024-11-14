@@ -40,6 +40,18 @@
                     <desc/>
                     <param desc="" multiplicity="1" name="parametername" type="string"/>
                 </event>
+                <event name="UpdateErrorRangeDisplay">
+                    <desc/>
+                    <param desc="" multiplicity="1" name="parametername" type="string"/>
+                </event>
+                <event name="UpdateLiveErrorDisplay">
+                    <desc/>
+                    <param desc="" multiplicity="1" name="parametername" type="string"/>
+                </event>
+                <event name="UpdateLiveThicknessDisplay">
+                    <desc/>
+                    <param desc="" multiplicity="1" name="parametername" type="string"/>
+                </event>
                 <function name="OnGetValuesSubmit"/>
                 <function name="OnToggleMeasurementsSubmit"/>
                 <function name="OnResetDatabaseSubmit"/>

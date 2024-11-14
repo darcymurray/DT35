@@ -72,11 +72,17 @@ function DatabaseHandle.DatabaseInitialised()
   -- Schema
   local testStatement = DatabaseHandle.db:prepare("select * from measurements")
   if testStatement == nil then
-    local initSchemaStatement = DatabaseHandle.db:prepare("CREATE TABLE measurements (Id INTEGER PRIMARY KEY AUTOINCREMENT, datetime TEXT NOT NULL, thickness REAL);")
+    local initSchemaStatement = DatabaseHandle.db:prepare("CREATE TABLE measurements (Id INTEGER PRIMARY KEY AUTOINCREMENT, datetime TEXT NOT NULL, thickness REAL, error REAL);")
     if initSchemaStatement:step() == "DONE" then print("Database schema created") return true
     else print("Failed to create database schema") return false end
-  -- setupDb()
-  else return true end
+
+  else
+    local sizeStatement = DatabaseHandle.db:prepare("select count(*) from measurements")
+    if sizeStatement:step() == "ROW" then DatabaseHandle.Size = sizeStatement:getColumnInt(0)
+    else DatabaseHandle.Size = 0 end
+    Script.notifyEvent('UpdateDatabaseSizeDisplay', DatabaseHandle.Size)
+    return true
+  end
 end
 
 function DatabaseHandle.InitialiseStatements()
@@ -87,7 +93,7 @@ function DatabaseHandle.InitialiseStatements()
   DatabaseHandle.nextId = nextIdStatement:getColumnInt(0)
 
   -- Insert statement
-  DatabaseHandle.insertStmt = DatabaseHandle.db:prepare("insert into measurements values(?,?,?)")
+  DatabaseHandle.insertStmt = DatabaseHandle.db:prepare("insert into measurements values(?,?,?,?)")
   if (DatabaseHandle.insertStmt == nil) then print("Error: " .. DatabaseHandle.db:getErrorMessage()) end
 
   -- Get statement
@@ -97,14 +103,16 @@ function DatabaseHandle.InitialiseStatements()
   return true
 end
 
+DatabaseHandle.Size = 0
 -- Inserts dataset into the database
-function DatabaseHandle.Insert(time, thickness)
+function DatabaseHandle.Insert(time, thickness, errorAbs)
   if (DatabaseHandle.insertStmt ~= nil) then
-    DatabaseHandle.insertStmt:bind(0, DatabaseHandle.nextId, time, thickness)
+    DatabaseHandle.insertStmt:bind(0, DatabaseHandle.nextId, time, thickness, errorAbs)
     if (DatabaseHandle.insertStmt:step() == "DONE") then
       DatabaseHandle.nextId = DatabaseHandle.nextId + 1
-      Script.notifyEvent('UpdateDatabaseSizeDisplay', tostring(DatabaseHandle.nextId))
-      print(string.format("Inserted into database. Time: " .. time .. ", thickness: " .. thickness))
+      DatabaseHandle.Size = DatabaseHandle.Size + 1
+      Script.notifyEvent('UpdateDatabaseSizeDisplay', string.format("%.0f", DatabaseHandle.Size))
+      print(string.format("Inserted into database: time, thickness, error = %s, %.4f, %.4f", time, thickness, errorAbs))
     else
       print("Coult not insert data: " .. DatabaseHandle.insertStmt:getErrorMessage())
     end
@@ -113,14 +121,13 @@ function DatabaseHandle.Insert(time, thickness)
 end
 
 -- Gets values between two times: Main.MinTime, Main.MaxTime
-function DatabaseHandle.Get()
-  TimerHandle.Timer:stop() 
+function DatabaseHandle.Get(startDateTime, endDateTime)
+  TimerHandle.Timer:stop()
   TimerHandle.measuringOn = 0
-  assert(TimerHandle.StartDate + TimerHandle.StartTime <= TimerHandle.EndDate + TimerHandle.EndTime, "Start time > End time")
+  assert(startDateTime <= endDateTime, "Start time > End time")
   local datetime = {}
   local thickness = {}
   if (DatabaseHandle.getStmt ~= nil) then
-    local startDateTime, endDateTime = TimerHandle.StartDate + TimerHandle.StartTime, TimerHandle.EndDate + TimerHandle.EndTime
     DatabaseHandle.getStmt:bind(0, startDateTime, endDateTime)
     local timeStarted = DateTime.getTimestamp()
     local stepResult = DatabaseHandle.getStmt:step()

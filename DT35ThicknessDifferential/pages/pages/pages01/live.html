@@ -1,13 +1,6 @@
 
 	<layout-column id="ColumnLayout1">
-            <layout-row id="RowLayout2" style="flex-grow: 0; width: 100%">
-		<davinci-button id="Button1" type="primary" icon-position="append">
-			<span>Toggle Measurements</span>
-			<crown-set event="submit"
-				crown-function="DT35ThicknessDifferential/OnToggleMeasurementsSubmit"
-				protocol="crownMSGPACK">
-			</crown-set>
-		</davinci-button>
+  <layout-row id="RowLayout2" style="flex-grow: 0; width: 100%">
 		<davinci-value-display id="ValueDisplay12" label="Database Size">
 			<crown-on property="value"
 				crown-event="DT35ThicknessDifferential/UpdateDatabaseSizeDisplay">
@@ -18,11 +11,38 @@
 				crown-event="DT35ThicknessDifferential/UpdateDateTimeDisplay">
 			</crown-on>
 		</davinci-value-display>
+		<davinci-value-display id="ValueDisplay3" label="Thickness (mm)">
+			<crown-on property="value"
+				crown-event="DT35ThicknessDifferential/UpdateLiveThicknessDisplay">
+			</crown-on>
+		</davinci-value-display>
+		<davinci-value-display id="ValueDisplay2" label="Error (mm)">
+			<crown-on property="value"
+				crown-event="DT35ThicknessDifferential/UpdateLiveErrorDisplay">
+			</crown-on>
+		</davinci-value-display>
+		<davinci-value-display id="ValueDisplay1" label="Error Range (mm)">
+			<crown-on property="value"
+				crown-event="DT35ThicknessDifferential/UpdateErrorRangeDisplay">
+			</crown-on>
+		</davinci-value-display>
+		<davinci-button id="Button1" type="primary" icon-position="append">
+			<span>Toggle Measurements</span>
+			<crown-set event="submit"
+				crown-function="DT35ThicknessDifferential/OnToggleMeasurementsSubmit"
+				protocol="crownMSGPACK">
+			</crown-set>
+		</davinci-button>
 	</layout-row>
     <layout-row id="RowLayout3" style="flex-shrink: 0; width: 100%">
-		<sick-viewer2d id="ViewerLive" viewer-id="ViewerLive"
+		<sick-viewer2d id="ViewerLive" viewer-id="ViewerThicknessLive"
 			style="width: 100%; height: 100%">
 		</sick-viewer2d>
 	</layout-row>
+	<!-- <layout-row id="RowLayout34" style="flex-shrink: 0; width: 100%">
+		<sick-viewer2d id="ViewerLive2" viewer-id="ViewerErrorLive"
+			style="width: 100%; height: 100%">
+		</sick-viewer2d>
+	</layout-row> -->
     </layout-column>
   

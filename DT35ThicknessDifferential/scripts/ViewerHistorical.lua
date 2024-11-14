@@ -2,8 +2,7 @@ Viewer = {}
 
 Viewer.ViewerHistorical = View.create("ViewerHistorical")
 Viewer.ViewerHistoricalDecoration = View.GraphDecoration.create()
-Viewer.ViewerHistoricalDecoration:setYBounds(80, 120)
-Viewer.ViewerHistoricalDecoration:setDrawSize(0.1)
+-- Viewer.ViewerHistoricalDecoration:setYBounds(80, 120)
 Viewer.ViewerHistoricalDecoration:setLabels("Time", "Thickness")
 Viewer.ViewerHistoricalDecoration:setLabelsVisible(false)
 
@@ -11,6 +10,7 @@ local function presentPoints(times, thickness)
   local title = "Between " .. DateTime.formatUnixTime(math.floor(times[1] / 1000)) .. " and " .. DateTime.formatUnixTime(math.floor(times[#times] / 1000))
   local minTime = times[1] - 100
   for key, time in pairs(times) do times[key] = (time - minTime) / 1000 end
+  Viewer.ViewerHistoricalDecoration:setDrawSize(#times / 7000)
   Viewer.ViewerHistoricalDecoration:setTitle(title)
   Viewer.ViewerHistorical:addGraph(thickness, times, Viewer.ViewerHistoricalDecoration)
 end
@@ -55,7 +55,7 @@ local function presentTimeLabels(times, timeLabels)
   end
 
   local textDecoration = View.TextDecoration.create()
-  textDecoration:setSize(1)
+  textDecoration:setSize(10)
   textDecoration:setColor(0,0,0)
   textDecoration:setHorizontalAlignment("CENTER")
   textDecoration:setVerticalAlignment("CENTER")
@@ -67,13 +67,13 @@ end
 
 local function presentThicknessLabels()
   local numLabels = 8
-  local min = 80
-  local max = 120
+  local min = 0
+  local max = 80
   local unixTimeRange = max - min
-  local increment = 5
+  local increment = unixTimeRange / numLabels
 
   local textDecoration = View.TextDecoration.create()
-  textDecoration:setSize(1)
+  textDecoration:setSize(10)
   textDecoration:setColor(0,0,0)
   textDecoration:setHorizontalAlignment("CENTER")
   textDecoration:setVerticalAlignment("CENTER")

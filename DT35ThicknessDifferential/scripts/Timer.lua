@@ -1,42 +1,54 @@
 TimerHandle = {}
-TimerHandle.StartDate = 1731236400000
-TimerHandle.StartDateString = "11/11/2024"
-TimerHandle.EndDate = 1731236400000
-TimerHandle.EndDateString = "11/11/2024"
-TimerHandle.StartTime = 40380000
-TimerHandle.StartTimeString = "11:13:00"
-TimerHandle.EndTime = 40440000
-TimerHandle.EndTimeString = "11:14:00"
+TimerHandle.StartDate = 1731495600000
+TimerHandle.StartDateString = "14/11/2024"
+TimerHandle.EndDate = 1731495600000
+TimerHandle.EndDateString = "14/11/2024"
+TimerHandle.StartTime = 45240000
+TimerHandle.StartTimeString = "12:34:00"
+TimerHandle.EndTime = 45300000
+TimerHandle.EndTimeString = "12:35:00"
 TimerHandle.Timer = Timer.create()
 TimerHandle.Timer:setExpirationTime(Main.TimerExpirationTime)
 TimerHandle.Timer:setPeriodic(true)
 
 -- Main timer expiry and measurement reading function
-local function handleOnExpired()
+local zeroA = 130 * 1000000
+local zeroB = 30 * 1000000
+local distanceBetweenSensors = 159.4
+local realLength = 67.9
+Script.serveEvent('DT35ThicknessDifferential.UpdateLiveThicknessDisplay', 'UpdateLiveThicknessDisplay')
+Script.serveEvent('DT35ThicknessDifferential.UpdateLiveErrorDisplay', 'UpdateLiveErrorDisplay')
+local function OD2HandleOnExpired()
   local datetime = DateTime.getDateTime()
   local time = DateTime.getUnixTimeMilliseconds()
   Script.notifyEvent('UpdateDateTimeDisplay', string.sub(datetime, 1, -5))
 
   if TimerHandle.measuringOn == 1 then
-    local dataA,  _ = Device.IOLinkDT35A:readProcessData() -- equivalent to IOLinkDT35A:readData(40, 0)
-    if #dataA ~= 2 then return end
-    local distanceA = string.unpack('I2', dataA)  -- Extract UINT16 value
-    local distanceAmm = ((distanceA % 256) * 256) + (distanceA // 256)
+    local dataA, _ = Device.IOLinkA:readProcessData()
+    local distanceA = string.unpack('>i4', dataA)
+    local distanceAmm = (tonumber(distanceA) + zeroA) / 1000000
 
-    local dataB,  _ = Device.IOLinkDT35B:readProcessData() -- equivalent to IOLinkDT35B:readData(40, 0)
-    local distanceB = string.unpack('I2', dataB)  -- Extract UINT16 value
-    local distanceBmm = ((distanceB % 256) * 256) + (distanceB // 256)
+    local dataB,  _ = Device.IOLinkB:readProcessData()
+    local distanceB = string.unpack('>i4', dataB)
+    local distanceBmm = (tonumber(distanceB) + zeroB) / 1000000
 
-    local objectThickness = Main.DistanceBetweenSensors - (distanceAmm + distanceBmm)
+    local objectThickness = distanceBetweenSensors - (distanceAmm + distanceBmm)
+    if objectThickness < 0 then return end
+    local readingError = math.abs(realLength - objectThickness)
 
-    DatabaseHandle.Insert(time, objectThickness)
-    ViewerLive.DisplayData(time, objectThickness)
+    Script.notifyEvent('UpdateLiveThicknessDisplay', string.format("%.4f", objectThickness))
+    Script.notifyEvent('UpdateLiveErrorDisplay', string.format("%.4f", readingError))
+
+    DatabaseHandle.Insert(time, objectThickness, readingError)
+    -- ViewerLive.DisplayData(ViewerLive.ThicknessViewer, ViewerLive.ThicknessViewerDecoration, time, objectThickness, ViewerLive.Thickness)
+    ViewerLive.DisplayData(time, objectThickness, readingError)
   end
 end
-TimerHandle.Timer:register('OnExpired', handleOnExpired)
+TimerHandle.Timer:register('OnExpired', OD2HandleOnExpired)
 
 local function OnGetValuesSubmit()
-  DatabaseHandle.Get()
+  local startDateTime, endDateTime = TimerHandle.StartDate + TimerHandle.StartTime, TimerHandle.EndDate + TimerHandle.EndTime
+  DatabaseHandle.Get(startDateTime, endDateTime)
 end
 Script.serveFunction("DT35ThicknessDifferential.OnGetValuesSubmit", OnGetValuesSubmit)
 
